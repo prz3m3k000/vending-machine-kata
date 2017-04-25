@@ -10,6 +10,7 @@ public class OrderContext {
     private int productShelfNumber;
     private int productPrice;
     private List<Coin> insertedCoins = new LinkedList<>();
+    private int insertedCoinsValue;
 
     public OrderContext(int productShelfNumber, int productPrice) {
         this.productShelfNumber = productShelfNumber;
@@ -30,5 +31,10 @@ public class OrderContext {
 
     public void insertCoin(Coin coin) {
         insertedCoins.add(coin);
+        insertedCoinsValue += coin.getValue();
+    }
+
+    public boolean isProductPriceCovered() {
+        return insertedCoinsValue >= productPrice;
     }
 }

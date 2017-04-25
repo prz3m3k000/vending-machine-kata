@@ -41,6 +41,25 @@ public class OrderContextTest {
         assertThat(orderContext.getInsertedCoins()).containsExactlyInAnyOrder(coin);
     }
 
+    @Test
+    public void inserted_coins_covers_product_price_test() {
+        OrderContext orderContext = createOrderContext();
+        orderContext.insertCoin(new Coin(CoinValue.VALUE_50));
+        orderContext.insertCoin(new Coin(CoinValue.VALUE_20));
+        orderContext.insertCoin(new Coin(CoinValue.VALUE_20));
+        orderContext.insertCoin(new Coin(CoinValue.VALUE_10));
+
+        assertThat(orderContext.isProductPriceCovered()).isTrue();
+    }
+
+    @Test
+    public void inserted_coins_does_not_cover_product_price_test() {
+        OrderContext orderContext = createOrderContext();
+        orderContext.insertCoin(new Coin(CoinValue.VALUE_10));
+
+        assertThat(orderContext.isProductPriceCovered()).isFalse();
+    }
+
     private OrderContext createOrderContext() {
         return new OrderContext(PRODUCT_SHELF_NUMBER, PRODUCT_PRICE);
     }
