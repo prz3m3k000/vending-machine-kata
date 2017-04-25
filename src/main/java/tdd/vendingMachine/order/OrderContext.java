@@ -37,4 +37,8 @@ public class OrderContext {
     public boolean isProductPriceCovered() {
         return insertedCoinsValue >= productPrice;
     }
+
+    public int getInsertedCoinsValue() {
+        return insertedCoinsValue;
+    }
 }

@@ -42,6 +42,15 @@ public class OrderContextTest {
     }
 
     @Test
+    public void inserted_coins_value_is_equal_to_value_of_all_inserted_coins_test() {
+        OrderContext orderContext = createOrderContext();
+        orderContext.insertCoin(new Coin(CoinValue.VALUE_50));
+        orderContext.insertCoin(new Coin(CoinValue.VALUE_20));
+
+        assertThat(orderContext.getInsertedCoinsValue()).isEqualTo(70);
+    }
+
+    @Test
     public void inserted_coins_covers_product_price_test() {
         OrderContext orderContext = createOrderContext();
         orderContext.insertCoin(new Coin(CoinValue.VALUE_50));
