@@ -11,6 +11,6 @@ public class OrderResultTest {
 
     @Test
     public void order_result_creation_test() {
-        assertThat(new OrderResult()).isNotNull();
+        assertThat(new OrderResult(null, null)).isNotNull();
     }
 }
