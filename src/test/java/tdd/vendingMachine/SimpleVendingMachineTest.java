@@ -8,6 +8,7 @@ import tdd.vendingMachine.coin.Coin;
 import tdd.vendingMachine.coin.CoinRepository;
 import tdd.vendingMachine.coin.CoinValue;
 import tdd.vendingMachine.coin.payoutsolver.NotEnoughCoinsException;
+import tdd.vendingMachine.display.Display;
 import tdd.vendingMachine.order.OrderContext;
 import tdd.vendingMachine.order.OrderCreationException;
 import tdd.vendingMachine.order.OrderProcessingException;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,6 +47,7 @@ public class SimpleVendingMachineTest {
     public static final String PRODUCT_NAME = "TestProduct";
 
     private VendingMachine vendingMachine;
+    private Display displayMock;
 
     @Before
     public void before() throws Exception {
@@ -61,6 +64,8 @@ public class SimpleVendingMachineTest {
         assertThatThrownBy(() -> vendingMachine.createOrderForShelf(NON_EXISTENT_SHELF))
             .isInstanceOf(OrderCreationException.class)
             .hasMessage("No order created, shelf %d does not exist.", NON_EXISTENT_SHELF);
+
+        verify(displayMock).printMessage(String.format("Półka %s nie istnieje.", NON_EXISTENT_SHELF));
     }
 
     @Test
@@ -68,11 +73,14 @@ public class SimpleVendingMachineTest {
         assertThatThrownBy(() -> vendingMachine.createOrderForShelf(EMPTY_SHELF))
             .isInstanceOf(OrderCreationException.class)
             .hasMessage("No order created, shelf %s is empty.", EMPTY_SHELF);
+
+        verify(displayMock).printMessage(String.format("Półka %s jest pusta.", EMPTY_SHELF));
     }
 
     @Test
-    public void created_order_is_not_null_test() throws Exception {
+    public void order_created_successfully_test() throws Exception {
         assertThat(vendingMachine.createOrderForShelf(SHELF_WITH_PRODUCTS)).isNotNull();
+        verify(displayMock).printMessage(String.format("%d", PRODUCT_PRICE));
     }
 
     @Test
@@ -95,6 +103,8 @@ public class SimpleVendingMachineTest {
         assertThatThrownBy(() -> vendingMachine.completeOrder(orderContextMock))
             .isInstanceOf(OrderProcessingException.class)
             .hasMessage("Products price not covered, missing %s.", PRODUCT_PRICE);
+
+        verify(displayMock).printMessage("Zamówienie odrzucone, produkt nie został w pełni opłacony.");
     }
 
     @Test
@@ -104,6 +114,8 @@ public class SimpleVendingMachineTest {
         assertThatThrownBy(() -> vendingMachine.completeOrder(orderContextMock))
             .isInstanceOf(OrderProcessingException.class)
             .hasMessage("Cannot payout change, not enough coins.");
+
+        verify(displayMock).printMessage("Zamówienie odrzucone, brak monet do wypłacenia reszty.");
     }
 
     @Test
@@ -113,6 +125,8 @@ public class SimpleVendingMachineTest {
         assertThatThrownBy(() -> vendingMachine.completeOrder(orderContextMock))
             .isInstanceOf(OrderProcessingException.class)
             .hasMessage("Ordered product is not available.");
+
+        verify(displayMock).printMessage("Zamówienie odrzucone, produkt jest niedostępny.");
     }
 
     @Test
@@ -124,6 +138,8 @@ public class SimpleVendingMachineTest {
         assertThat(orderResult).isNotNull();
         assertThat(orderResult.getProduct()).isPresent();
         assertThat(orderResult.getChange()).isPresent();
+
+        verify(displayMock).printMessage("Zamówienie gotowe.");
     }
 
     @Test
@@ -136,13 +152,16 @@ public class SimpleVendingMachineTest {
         assertThat(orderResult.getProduct()).isNotPresent();
         assertThat(orderResult.getChange()).isPresent();
         assertThat(orderResult.getChange().get()).containsExactlyElementsOf(INSERTED_COINS);
+
+        verify(displayMock).printMessage("Zamówienie anulowane.");
     }
 
     private VendingMachine createMockedVendingMachine() throws Exception {
         CoinRepository coinRepositoryMock = createCoinRepositoryMock();
         ShelfRepository shelfRepositoryMock = createShelfRepositoryMock();
+        displayMock = mock(Display.class);
 
-        return new SimpleVendingMachine(coinRepositoryMock, shelfRepositoryMock);
+        return new SimpleVendingMachine(coinRepositoryMock, shelfRepositoryMock, displayMock);
     }
 
     private CoinRepository createCoinRepositoryMock() throws Exception {
