@@ -9,6 +9,10 @@ public class OptimalPayoutSolver implements PayoutSolver {
 
     @Override
     public List<Coin> solvePayout(int amount, List<Coin> availableCoins) throws NotEnoughCoinsException {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount cannot be negative.");
+        }
+
         return getPayoutForAmount(amount, calculateAllPayoutSolutions(amount, availableCoins));
     }
 

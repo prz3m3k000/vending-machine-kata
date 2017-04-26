@@ -23,6 +23,12 @@ public class OptimalPayoutSolverTest {
     }
 
     @Test
+    public void negative_amount_is_illegal_argument_test() {
+        PayoutSolver ps = new OptimalPayoutSolver();
+        assertThatThrownBy(() -> ps.solvePayout(-1, Collections.emptyList())).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     public void no_coins_required_to_payout_zero_test() throws NotEnoughCoinsException {
         PayoutSolver ps = new OptimalPayoutSolver();
 
