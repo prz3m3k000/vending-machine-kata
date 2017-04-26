@@ -6,7 +6,6 @@ import org.junit.runners.JUnit4;
 import tdd.vendingMachine.coin.Coin;
 import tdd.vendingMachine.coin.CoinValue;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
