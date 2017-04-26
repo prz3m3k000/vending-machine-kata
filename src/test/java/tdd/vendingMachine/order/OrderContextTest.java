@@ -29,25 +29,21 @@ public class OrderContextTest {
 
     @Test
     public void order_context_has_shelf_number_test() {
-        // OrderContext orderContext = createOrderContext();
         assertThat(orderContext.getProductShelfNumber()).isEqualTo(PRODUCT_SHELF_NUMBER);
     }
 
     @Test
     public void order_context_has_product_price_test() {
-//        OrderContext orderContext = createOrderContext();
         assertThat(orderContext.getProductPrice()).isEqualTo(PRODUCT_PRICE);
     }
 
     @Test
     public void order_context_starts_with_empty_list_of_inserted_coins_test() {
-//        OrderContext orderContext = createOrderContext();
         assertThat(orderContext.getInsertedCoins()).isEmpty();
     }
 
     @Test
     public void order_context_collects_inserted_coins_test() {
-//        OrderContext orderContext = createOrderContext();
         Coin coin = new Coin(CoinValue.VALUE_10);
         orderContext.insertCoin(coin);
 
@@ -56,7 +52,6 @@ public class OrderContextTest {
 
     @Test
     public void inserting_coin_updates_remaining_amount_on_display_test() {
-//        OrderContext orderContext = createOrderContext();
         Coin coinToInsert = new Coin(CoinValue.VALUE_10);
         orderContext.insertCoin(coinToInsert);
 
@@ -65,7 +60,6 @@ public class OrderContextTest {
 
     @Test
     public void inserted_coins_value_is_equal_to_value_of_all_inserted_coins_test() {
-//        OrderContext orderContext = createOrderContext();
         orderContext.insertCoin(new Coin(CoinValue.VALUE_50));
         orderContext.insertCoin(new Coin(CoinValue.VALUE_20));
 
@@ -74,7 +68,6 @@ public class OrderContextTest {
 
     @Test
     public void inserted_coins_covers_product_price_test() {
-//        OrderContext orderContext = createOrderContext();
         orderContext.insertCoin(new Coin(CoinValue.VALUE_50));
         orderContext.insertCoin(new Coin(CoinValue.VALUE_20));
         orderContext.insertCoin(new Coin(CoinValue.VALUE_20));
@@ -85,13 +78,8 @@ public class OrderContextTest {
 
     @Test
     public void inserted_coins_does_not_cover_product_price_test() {
-//        OrderContext orderContext = createOrderContext();
         orderContext.insertCoin(new Coin(CoinValue.VALUE_10));
 
         assertThat(orderContext.isProductPriceCovered()).isFalse();
     }
-
-//    private OrderContext createOrderContext() {
-//        return new OrderContext(PRODUCT_SHELF_NUMBER, PRODUCT_PRICE);
-//    }
 }
